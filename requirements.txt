@@ -13,7 +13,7 @@ coverage==7.11.3
 cycler==0.12.1
 et_xmlfile==2.0.0
 Faker==38.0.0
-fastapi==0.116.1
+fastapi==0.136.0
 fonttools==4.62.0
 geopandas==1.1.2
 greenlet==3.2.3
