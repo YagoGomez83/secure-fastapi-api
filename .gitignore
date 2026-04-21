@@ -1,0 +1,4 @@
+.env                    # Secretos y configuraciones locales
+__pycache__/           # Archivos cache de Python
+*.pyc                  # Archivos compilados de Python
+.venv/                 # Entorno virtual (ocupa mucho espacio)
