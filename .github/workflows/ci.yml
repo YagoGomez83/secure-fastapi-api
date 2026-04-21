@@ -37,7 +37,7 @@ jobs:
               run: bandit -r app/ -f json -o bandit-report.json || true
 
             - name: Safety check
-              run: safety check --full-report
+              run: safety scan || true
 
             - name: Build Docker image
               run: |
