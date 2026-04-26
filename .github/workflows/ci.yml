@@ -40,7 +40,7 @@ jobs:
 
         # Análisis de Composición de Software (SCA)
       - name: Safety SCA check
-        run: safety check -r requirements.txt
+        run: safety scan -r requirements.txt
 
       - name: Build Docker image
         run: docker build -t secure-fastapi-api:latest .
