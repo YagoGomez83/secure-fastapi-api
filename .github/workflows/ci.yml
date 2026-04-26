@@ -34,7 +34,7 @@ jobs:
       # Análisis Estático de Código (SAST)
       # Quitamos el || true. Si hay vulnerabilidades severas, queremos que falle.
       - name: Bandit SAST scan
-        run: bandit -c pyproject.toml -r app/ -ll -ii
+        run: bandit -r app/ -ll -ii
         # -ll: Reporta solo vulnerabilidades Medium y High (ignora Low)
         # -ii: Ignora niveles de confianza bajos
 

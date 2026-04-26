@@ -3,200 +3,144 @@
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.136-green)
 ![Docker](https://img.shields.io/badge/Docker-ready-blue)
-![CI](https://github.com/YagoGomez83/secure-fastapi-api/actions/workflows/ci.yml/badge.svg)
-![Security](https://img.shields.io/badge/SAST-Bandit-red)
+![CI/CD](https://github.com/YagoGomez83/secure-fastapi-api/actions/workflows/ci.yml/badge.svg)
+![Security](https://img.shields.io/badge/Security-SAST%20%7C%20SCA-red)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-REST API built with **FastAPI** following a clean layered architecture, with Docker support, security best practices, and a ready-to-extend structure.
-
-> **Current status:** MVP with modular architecture ready for expansion. Core layers (models, services, repositories, security) are scaffolded and actively being implemented.
+Una API REST construida con **FastAPI** diseñada desde cero con mentalidad **DevSecOps**. Este proyecto no solo expone endpoints, sino que demuestra la implementación de arquitectura limpia, seguridad por diseño, observabilidad y un pipeline de integración continua robusto listo para producción.
 
 ---
 
-## Why this project matters
+## Enfoque DevSecOps (Por qué este proyecto destaca)
 
-This project demonstrates practical **DevSecOps** skills applied to a real backend API:
+Este repositorio es una prueba de concepto de habilidades reales en ingeniería de seguridad y backend:
 
-- **Secure API development** — input validation, non-root containers, no hardcoded secrets
-- **Clean architecture** — layered separation: endpoints → services → repositories → models
-- **Security scanning** — static analysis with Bandit on every run
-- **Test automation** — Pytest with coverage reporting
-- **Docker hardening** — non-root user, slim base image, environment-based config
-- **CI/CD ready** — structured for GitHub Actions pipeline integration
+- **Autenticación Robusta:** Implementación de JWT (Stateless) y contraseñas hasheadas con **Argon2id** (resistente a memoria), mitigando ataques de tiempo (User Enumeration).
+- **Observabilidad Nivel Producción:** Logging estructurado en **JSON** y trazabilidad de peticiones mediante **Correlation IDs** usando `contextvars` (listo para ELK Stack/Splunk).
+- **Seguridad en CI/CD:** Pipeline de GitHub Actions que incluye análisis estático (SAST con Bandit), análisis de composición (SCA con Safety) y escaneo de contenedores (Trivy).
+- **Contenedores Seguros (Hardening):** Ejecución como usuario no-root (`appuser`), optimización de caché y gestión segura de variables de entorno.
+- **Arquitectura Limpia:** Separación estricta de responsabilidades (Endpoints → Services → Repositories → Models) usando Inyección de Dependencias.
 
 ---
 
-## Tech Stack
+## Stack Tecnológico
 
-| Layer | Technology |
+| Capa | Tecnología |
 |---|---|
-| Framework | FastAPI 0.136 + Uvicorn |
-| Validation | Pydantic v2 + pydantic-settings |
-| Database | SQLAlchemy 2.0 · PostgreSQL (psycopg2) · SQLite async (aiosqlite) |
-| Security | bcrypt · Argon2 · Passlib · Bandit |
-| Testing | Pytest · pytest-asyncio · pytest-cov |
-| Containerization | Docker · Docker Compose |
+| Framework Core | FastAPI 0.136 + Uvicorn |
+| Validación & Config | Pydantic v2 + pydantic-settings |
+| ORM & Base de Datos | SQLAlchemy 2.0 · PostgreSQL (psycopg2) · SQLite (Desarrollo) |
+| Seguridad (Auth) | Argon2 (argon2-cffi) · JWT (python-jose) |
+| Observabilidad | JSON Logging + UUID Correlation IDs (`contextvars`) |
+| Testing | Pytest · httpx (TestClient) · pytest-cov |
+| CI/CD Pipeline | GitHub Actions · Bandit (SAST) · Safety (SCA) · Trivy |
 
 ---
 
-## Project Structure
+## Arquitectura de Carpetas
 
-```
+```text
 secure-fastapi-api/
+├── .github/workflows/         # Pipeline CI/CD (SAST, SCA, Docker Build)
 ├── app/
-│   ├── main.py                  # Application entry point
-│   ├── api/
-│   │   └── v1/
-│   │       └── endpoints/
-│   │           └── user.py      # User endpoints
+│   ├── api/v1/endpoints/
+│   │   ├── auth.py            # Login, Registro, Refresh
+│   │   └── user.py            # Endpoints de recursos
 │   ├── core/
-│   │   ├── config.py            # Settings via pydantic-settings
-│   │   ├── logging.py           # Logging configuration
-│   │   └── security.py          # Auth utilities
-│   ├── models/
-│   │   └── user.py              # SQLAlchemy models
-│   ├── schemas/
-│   │   └── user.py              # Pydantic schemas (request/response)
-│   ├── repositories/
-│   │   └── user_repository.py   # Database access layer
-│   └── services/
-│       └── user_service.py      # Business logic layer
-├── tests/
-│   └── test_users.py
-├── Dockerfile
-├── docker-compose.yml
-└── requirements.txt
+│   │   ├── config.py          # Gestión de secretos (.env)
+│   │   ├── logging.py         # Formateador JSON y ContextVars
+│   │   └── security.py        # Hashing (Argon2) y JWT
+│   ├── models/                # Entidades SQLAlchemy
+│   ├── repositories/          # Acceso a base de datos
+│   ├── schemas/               # Validaciones Pydantic
+│   └── services/              # Lógica de negocio core
+├── tests/                     # Suite de pruebas Pytest
+├── Dockerfile                 # Construcción segura en capas (Non-root)
+└── docker-compose.yml         # Orquestación local
 ```
 
 ---
 
-## Getting Started
+## Empezando (Getting Started)
 
-### Prerequisites
+### Requisitos Previos
 
 - Python 3.12+
-- PostgreSQL 12+ *(or SQLite for local development)*
-- Docker & Docker Compose *(optional)*
+- Docker & Docker Compose (Recomendado)
 
-### Local Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/YagoGomez83/secure-fastapi-api.git
-   cd secure-fastapi-api
-   ```
-
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   # Linux/macOS
-   source venv/bin/activate
-   # Windows
-   venv\Scripts\activate
-   ```
-
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Configure environment variables:
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `.env` with your values:
-   ```env
-   APP_NAME=Secure API
-   APP_ENV=dev
-   APP_PORT=8000
-   DEBUG=true
-   ```
-
-5. Start the server:
-   ```bash
-   uvicorn app.main:app --reload
-   ```
-
-   API available at `http://localhost:8000`
-
----
-
-### Docker
+### Despliegue con Docker (La forma rápida y segura)
 
 ```bash
 docker-compose up --build
 ```
 
-API available at `http://localhost:8001`
+*La API estará disponible en `http://localhost:8001`*
 
-> The container runs as a non-root user for added security.
+### Instalación Local (Para Desarrollo)
+
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/YagoGomez83/secure-fastapi-api.git
+   cd secure-fastapi-api
+   ```
+
+2. Crear entorno virtual e instalar dependencias:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # En Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. Configurar el entorno (Nunca subas el `.env` real):
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Ejecutar el servidor:
+   ```bash
+   uvicorn app.main:app --reload
+   ```
 
 ---
 
-## API Reference
+## Referencia de la API
 
-### Health
+La documentación interactiva se autogenera gracias a OpenAPI:
+
+- **Swagger UI:** `http://localhost:8000/docs` (o puerto 8001 en Docker)
+- **ReDoc:** `http://localhost:8000/redoc`
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/health` | Returns API status and environment |
-
-**Response:**
-```json
-{
-  "status": "ok",
-  "env": "dev"
-}
-```
-
-### Users — `/api/v1`
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/v1/users` | List all users |
-| `GET` | `/api/v1/users/{user_id}` | Get user by ID |
-
-Interactive docs available at:
-- Swagger UI → `http://localhost:8000/docs`
-- ReDoc → `http://localhost:8000/redoc`
+| `GET` | `/health` | Estado de la API y entorno |
+| `POST` | `/api/v1/auth/register` | Registro de usuario |
+| `POST` | `/api/v1/auth/login` | Login y obtención de JWT |
+| `GET` | `/api/v1/users` | Listar todos los usuarios |
+| `GET` | `/api/v1/users/{user_id}` | Obtener usuario por ID |
 
 ---
 
-## Screenshots
+## Pruebas y Cobertura
 
-> Add screenshots here once the API is running with real data.
-
-| Swagger UI | Health endpoint | Docker logs |
-|---|---|---|
-| *(coming soon)* | *(coming soon)* | *(coming soon)* |
-
----
-
-## Testing
-
-Run the full test suite:
 ```bash
-pytest
-```
-
-With coverage report:
-```bash
-pytest --cov=app --cov-report=term-missing
+pytest tests/ -v --cov=app --cov-report=term-missing
 ```
 
 ---
 
-## Security
+## Seguridad
 
-- Passwords hashed with **bcrypt** and **Argon2** via Passlib
-- Static analysis with **Bandit**
-- Docker image runs as **non-root user**
-- All settings loaded from environment variables — no hardcoded secrets
-- Input validation enforced by **Pydantic v2** on all request bodies
+- Contraseñas hasheadas con **Argon2id** (resistente a ataques de memoria)
+- Autenticación stateless con **JWT**
+- Análisis estático con **Bandit** (SAST) en cada push
+- Análisis de dependencias con **Safety** (SCA)
+- Escaneo de vulnerabilidades en contenedor con **Trivy**
+- Imagen Docker ejecutada como **usuario no-root**
+- Toda la configuración cargada desde variables de entorno — sin secretos hardcodeados
+- Validación de entrada con **Pydantic v2** en todos los request bodies
 
 ---
 
-## License
+## Licencia
 
 MIT © [YagoGomez83](https://github.com/YagoGomez83)
