@@ -10,7 +10,7 @@ pydantic_core==2.33.2
 annotated-types==0.7.0
 typing-inspection==0.4.2
 typing_extensions==4.14.1
-python-dotenv==1.2.1
+python-dotenv==1.2.2
 
 # Database
 SQLAlchemy==2.0.42
@@ -26,7 +26,7 @@ passlib==1.7.4
 cffi==2.0.0
 pycparser==2.23
 python-jose[cryptography]==3.4.0
-cryptography==46.0.5
+cryptography==46.0.7
 
 # Email validation
 email-validator==2.2.0
@@ -59,3 +59,4 @@ mdurl==0.1.2
 Pygments==2.20.0
 tzdata==2025.2
 six==1.17.0
+pyasn1==0.6.3
