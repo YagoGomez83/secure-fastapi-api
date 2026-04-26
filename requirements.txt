@@ -25,7 +25,7 @@ argon2-cffi-bindings==25.1.0
 passlib==1.7.4
 cffi==2.0.0
 pycparser==2.23
-python-jose[cryptography]==3.4.0
+PyJWT==2.8.0
 cryptography==46.0.7
 
 # Email validation
@@ -59,4 +59,3 @@ mdurl==0.1.2
 Pygments==2.20.0
 tzdata==2025.2
 six==1.17.0
-pyasn1==0.6.3

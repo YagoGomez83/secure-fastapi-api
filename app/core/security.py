@@ -3,7 +3,7 @@ from typing import Any
 
 from argon2 import PasswordHasher
 from argon2.exceptions import InvalidHashError, VerificationError, VerifyMismatchError
-from jose import jwt
+import jwt
 
 from app.core.config import settings
 
@@ -37,5 +37,5 @@ def create_access_token(
 
 
 def decode_access_token(token: str) -> dict[str, Any]:
-    """Decode and verify a JWT.  Raises ``jose.JWTError`` on any failure."""
+    """Decode and verify a JWT.  Raises ``jwt.PyJWTError`` on any failure."""
     return jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])

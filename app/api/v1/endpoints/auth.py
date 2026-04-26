@@ -1,6 +1,6 @@
+import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError
 from sqlalchemy.orm import Session
 
 from app.core.security import decode_access_token
@@ -31,7 +31,7 @@ def _get_current_user(
         if raw_sub is None:
             raise credentials_exc
         user_id = int(raw_sub)
-    except (JWTError, ValueError):
+    except (jwt.PyJWTError, ValueError):
         raise credentials_exc
 
     user = user_repository.get_by_id(db, user_id)
